@@ -1,0 +1,326 @@
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.app {
+  transition: background-color 0.5s ease; /* Smooth transition for background color */
+}
+
+.app.loading {
+  background-color: #e0e0e0; /* Change this to your desired loading background color */
+}
+
+.song-list-container {
+  width: 30%;
+  padding: 20px;
+  background-color: #202020;
+  overflow-y: hidden; /* Allow scrolling for the container */
+  max-height: 100vh; /* Ensure it doesn’t exceed viewport height */
+}
+
+.player-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.song-list {
+  padding: 20px;
+  max-height: calc(100vh - 60px); /* Ensures the list height fits within the container */
+  overflow-y: hidden; /* Enable scrolling within the song list */
+  scroll-behavior: smooth;
+  transition: transform 0.3s ease;
+}
+
+.menu-icon {
+  display: none; /* Hidden by default */
+  cursor: pointer;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 54px;
+}
+
+.song-item:hover {
+  background-color: #333;
+}
+.song-item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: transparent;
+    font-weight: bolder;
+}
+
+.song-list .search-bar {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 2px;
+  background-color: #333;
+  border: none;
+  color: #fff;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #333;
+  border: none;
+  color: #fff;
+}
+
+.search-bar {
+  flex-grow: 1; /* Allow input to take available space */
+  padding: 10px; /* Padding for input */
+  border: none;
+}
+
+.search-icon {
+  background: none; /* No background */
+  border: none; /* No border */
+  color: #fff; /* Icon color */
+  cursor: pointer; /* Pointer cursor */
+  margin-left: 10px; /* Space between input and icon */
+}
+
+.song-cover {
+  width: 30px;
+  height: 30px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.song-info {
+  flex-grow: 1;
+  display: inline-block;
+}
+
+.song-title, .song-artist, .song-duration {
+  color: #fff;
+}
+
+.song-title {
+  font-size: 1rem;
+  margin-top: 15px;
+  margin-bottom: -12px;
+}
+.song-artist{
+  margin-bottom: 18px;
+  font-size: 0.6rem;
+}
+.player {
+  /* position: relative; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  height: 93%;
+}
+
+.album-cover {
+  width: 300px;
+  height: 300px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.control-icon {
+  margin: 0 15px;
+  color: #fff;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.volume-control-wrapper {
+  display: flex;
+  align-items: center;
+
+}
+
+.volume-icon {
+  font-size: 1.5em; /* Adjusted icon size */
+  color: #fff;
+  cursor: pointer;
+}
+
+.volume-slider-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.volume-slider {
+  width: 79px;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* Styles for the track (unplayed section) */
+.volume-slider::-webkit-slider-runnable-track {
+  height: 8px; /* Height of the track */
+  background: #ccc; /* Background color for unplayed section */
+  border-radius: 5px; /* Rounded edges */
+}
+
+.volume-slider::-moz-range-track {
+  height: 8px; /* Height of the track for Firefox */
+  background: #ccc; /* Background color for unplayed section */
+}
+
+.volume-slider::-ms-track {
+  height: 8px; /* Height of the track for IE/Edge */
+  background: transparent; /* Transparent background for track in IE/Edge */
+}
+
+/* Styles for the thumb (the draggable part) */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none; /* Remove default styling */
+  width: 16px; /* Width of the thumb */
+  height: 16px; /* Height of the thumb */
+  background: #fff; /* Color of the thumb */
+  border-radius: 50%; /* Rounded thumb */
+  margin-top: -3px;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px; /* Width of the thumb for Firefox */
+  height: 16px; /* Height of the thumb for Firefox */
+  background: #fff; /* Color of the thumb for Firefox */
+}
+
+.volume-slider::-ms-thumb {
+  width: 16px; /* Width of the thumb for IE/Edge */
+  height: 16px; /* Height of the thumb for IE/Edge */
+  background: #fff; /* Color of the thumb for IE/Edge */
+}
+
+/* Styles for played and unplayed sections in IE/Edge */
+.volume-slider::-ms-fill-lower {
+  background: white; /* Color of played section in IE/Edge */
+}
+
+.volume-slider::-ms-fill-upper {
+  background: #ccc; /* Color of unplayed section in IE/Edge */
+}
+
+.seeker {
+  width: 300px;
+  margin: 10px auto; /* Center the seeker */
+  margin-top: 10px;
+  appearance: none;
+  background: transparent;
+}
+.seeker::-webkit-slider-runnable-track {
+  height: 8px; /* Height of the track */
+  background: #ccc; /* Background color for unplayed section */
+}
+
+.seeker::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none; /* Remove default styling */
+  width: 16px; /* Width of the thumb */
+  height: 16px; /* Height of the thumb */
+  background: #fff; /* Color of the thumb */
+  border-radius: 50%; /* Rounded thumb */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin-top: -3px;
+}
+
+.seeker::-moz-range-track {
+  height: 8px; /* Height of the track for Firefox */
+  background: linear-gradient(to right, white 0%, white var(--value), #ccc var(--value), #ccc 100%); /* Gradient from white to grey */
+}
+
+.seeker::-moz-range-thumb {
+  width: 16px; /* Width of the thumb for Firefox */
+  height: 16px; /* Height of the thumb for Firefox */
+  background: #fff; /* Color of the thumb for Firefox */
+  border-radius: 50%; /* Rounded thumb for Firefox */
+}
+
+.seeker::-ms-track {
+  height: 8px; /* Height of the track for IE/Edge */
+  background: transparent; /* Transparent background for track in IE/Edge */
+}
+
+.seeker::-ms-fill-lower {
+  background: white; /* Color of played section in IE/Edge */
+}
+
+.seeker::-ms-fill-upper {
+  background: #ccc; /* Color of unplayed section in IE/Edge */
+}
+
+.seeker::-ms-thumb {
+  width: 16px; /* Width of the thumb for IE/Edge */
+  height: 16px; /* Height of the thumb for IE/Edge */
+  background: #fff; /* Color of the thumb for IE/Edge */
+}
+
+@media (max-width: 768px) {
+  .menu-icon {
+    display: block; /* Show on small screens */
+    font-size: 24px; /* Adjust size as needed */
+    margin:10px; /* Add some margin */
+    color:#fff; /* Icon color */
+    z-index:10; /* Ensure it appears above other content */
+    position: absolute; /* Positioning for top left corner */
+    top:10px; /* Adjust as needed */
+    left:10px; /* Adjust as needed */
+  }
+
+  .song-list-container {
+    display: none; /* Hide by default on small screens */
+  }
+
+  .song-list-container.open {
+    display: block; /* Show when open */
+    position:absolute; /* Position absolutely when open */
+    top:0;
+    left:0;
+    width:100%; /* Full width */
+    height:100vh; /* Full height */
+    background-color:#202020; /* Background color */
+    z-index:10; /* Ensure it appears above other content */
+  }
+
+  .song-list {
+    overflow-y:auto; /* Enable scrolling for smaller screens */
+  }
+}
