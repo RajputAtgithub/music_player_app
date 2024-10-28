@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const SongList = ({ allSongs, topTracks, setCurrentSong, currentSongIndex, isPlaying }) => {
   const [activeTab, setActiveTab] = useState('forYou'); // Default tab is 'For You'
   const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [durations, setDurations] = useState([]); // State to store durations
   const activeSongRef = useRef(null);
 
   useEffect(() => {
@@ -11,30 +12,33 @@ const SongList = ({ allSongs, topTracks, setCurrentSong, currentSongIndex, isPla
     }
   }, [currentSongIndex]);
 
+  // Function to fetch duration for a given song URL
+  const fetchDuration = (url) => {
+    return new Promise((resolve) => {
+      const audio = new Audio(url);
+      audio.addEventListener('loadedmetadata', () => {
+        resolve(audio.duration);
+      });
+      audio.load(); // Load the audio file
+    });
+  };
+
+  useEffect(() => {
+    const loadDurations = async () => {
+      const displayedSongs = activeTab === 'forYou' ? allSongs : topTracks;
+      const durationsArray = await Promise.all(displayedSongs.map(song => fetchDuration(song.url)));
+      setDurations(durationsArray);
+    };
+
+    loadDurations();
+  }, [allSongs, topTracks, activeTab]); // Re-fetch durations when songs or active tab changes
+
   // Handle song selection
   const selectSong = (song) => {
     setCurrentSong(song); // Set the current song when a song is clicked
   };
 
   const displayedSongs = activeTab === 'forYou' ? allSongs : topTracks;
-
-  console.log("All Songs:", allSongs);
-  console.log("Top Tracks:", topTracks);
-  console.log("Type of displayed songs:", typeof displayedSongs);
-  console.log("Displayed Songs:", displayedSongs);
-
-  // Ensure displayedSongs is an array before filtering
-  if (!Array.isArray(displayedSongs)) {
-    console.error('Displayed songs is not an array:', displayedSongs);
-    return null; // Return null instead of an empty array to avoid rendering issues
-  }
-  
-  const filteredSongs = displayedSongs.filter(song => {
-    const matchesSearch = 
-      (song.name && song.name.toLowerCase().includes(searchQuery.toLowerCase())) || 
-      (song.artist && song.artist.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesSearch;
-  });
 
   return (
     <div className="song-list">
@@ -69,7 +73,7 @@ const SongList = ({ allSongs, topTracks, setCurrentSong, currentSongIndex, isPla
       </div>
 
       {/* Song List */}
-      {filteredSongs.map((song, index) => (
+      {displayedSongs.map((song, index) => (
         <div
           key={index}
           className={`song-item ${index === currentSongIndex ? 'active' : ''}`}
@@ -83,7 +87,7 @@ const SongList = ({ allSongs, topTracks, setCurrentSong, currentSongIndex, isPla
           </div>
             {/* Displaying duration */}
             <span className="song-duration">
-              {song.duration ? Math.floor(song.duration / 60) + ':' + ('0' + Math.floor(song.duration % 60)).slice(-2) : '0:00'}
+              {durations[index] ? Math.floor(durations[index] / 60) + ':' + ('0' + Math.floor(durations[index] % 60)).slice(-2) : '0:00'}
             </span>
 
           {/* Show play/pause icon based on isPlaying state */}
