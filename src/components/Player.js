@@ -9,6 +9,7 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
   const [isMuted, setIsMuted] = useState(false);
 
   // Determine which list to use based on currentSongIndex
+  const totalSongs = allSongs.length + topTracks.length;
   const currentSong = (currentSongIndex < allSongs.length) ? allSongs[currentSongIndex] : topTracks[currentSongIndex - allSongs.length];
 
   useEffect(() => {
@@ -16,14 +17,12 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
       if (audioRef.current.src !== currentSong.url) {
         audioRef.current.src = currentSong.url;
         audioRef.current.load();
-        setCurrentTime(0);
+        setCurrentTime(0); // Reset current time when song changes
       }
 
       const updateCurrentTime = () => setCurrentTime(audioRef.current.currentTime);
       const updateDuration = () => {
         setDuration(audioRef.current.duration);
-        // Reset current time when song changes
-        setCurrentTime(0);
       };
 
       audioRef.current.addEventListener('timeupdate', updateCurrentTime);
@@ -31,7 +30,7 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
       audioRef.current.addEventListener('ended', playNextTrack);
 
       if (isPlaying) {
-        audioRef.current.play();
+        audioRef.current.play().catch(error => console.error('Error playing audio:', error));
       }
 
       return () => {
@@ -44,18 +43,28 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
   }, [currentSongIndex, isPlaying]); // Use currentSongIndex in dependencies
 
   const togglePlayPause = async () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      await audioRef.current.play();
+    try {
+      if (isPlaying) {
+        await audioRef.current.pause();
+      } else {
+        await audioRef.current.play();
+      }
+      setIsPlaying(prev => !prev); // Toggle play state
+    } catch (error) {
+      console.error('Error toggling play/pause:', error);
     }
-    setIsPlaying(!isPlaying);
   };
 
   // Function to play the next track
   const playNextTrack = () => {
-    const nextIndex = (currentSongIndex + 1) % (allSongs.length + topTracks.length); // Loop back to first song if at end
+    const nextIndex = (currentSongIndex + 1) % totalSongs; // Loop back to first song if at end
     setCurrentSongIndex(nextIndex); // Update current song index
+  };
+
+  // Function to play the previous track
+  const playPreviousTrack = () => {
+    const prevIndex = (currentSongIndex - 1 + totalSongs) % totalSongs; // Loop back to last song if at start
+    setCurrentSongIndex(prevIndex); // Update current song index
   };
 
   // Handle volume change
@@ -104,7 +113,7 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
           <img src={`https://cms.samespace.com/assets/${currentSong.cover}`} alt={currentSong.title} className="album-cover" />
 
           <div className="time-controls">
-            <span>{Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)}</span>
+            <span className="song-start-time">{Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)}</span>
             <input
               type="range"
               className="seeker"
@@ -116,17 +125,17 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
                 '--value': `${(currentTime / duration) * 100}%` // Set CSS variable based on current time
               }}
             />
-            <span>{duration ? Math.floor(duration / 60) + ':' + ('0' + Math.floor(duration % 60)).slice(-2) : '0:00'}</span>
+            <span className="song-total-time">{duration ? Math.floor(duration / 60) + ':' + ('0' + Math.floor(duration % 60)).slice(-2) : '0:00'}</span>
           </div>
 
           <div className="player-controls">
-            <FaBackward className="control-icon" onClick={() => setCurrentSongIndex((prev) => (prev - 1 + allSongs.length + topTracks.length) % (allSongs.length + topTracks.length))} />
+            <FaBackward className="control-icon" onClick={playPreviousTrack} /> {/* Updated to call playPreviousTrack */}
             {isPlaying ? (
               <FaPause className="control-icon" onClick={togglePlayPause} />
             ) : (
               <FaPlay className="control-icon" onClick={togglePlayPause} />
             )}
-            <FaForward className="control-icon" onClick={() => setCurrentSongIndex((prev) => (prev + 1) % (allSongs.length + topTracks.length))} />
+            <FaForward className="control-icon" onClick={playNextTrack} /> {/* Updated to call playNextTrack */}
 
             {/* Volume controls */}
             <div className="volume-control-wrapper">
