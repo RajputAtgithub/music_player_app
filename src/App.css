@@ -127,11 +127,15 @@
 .song-title {
   font-size: 1rem;
   margin-top: 15px;
-  margin-bottom: -12px;
+  margin-bottom: -8px;
 }
 .song-artist{
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   font-size: 0.6rem;
+}
+.song-total-time, .song-start-time{
+  color: white;
+  padding-inline: 7px;
 }
 .player {
   /* position: relative; */
