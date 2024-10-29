@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { FaPlay, FaPause, FaForward, FaBackward, FaVolumeUp, FaVolumeMute, FaBars } from 'react-icons/fa';
 
 const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, isPlaying, setIsPlaying, accentColor, setIsMenuOpen }) => {
@@ -11,6 +11,18 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
   // Determine which list to use based on currentSongIndex
   const totalSongs = allSongs.length + topTracks.length;
   const currentSong = (currentSongIndex < allSongs.length) ? allSongs[currentSongIndex] : topTracks[currentSongIndex - allSongs.length];
+
+  // Function to play the next track
+  const playNextTrack = useCallback(() => {
+    const nextIndex = (currentSongIndex + 1) % totalSongs; // Loop back to first song if at end
+    setCurrentSongIndex(nextIndex); // Update current song index
+  }, [currentSongIndex, setCurrentSongIndex, totalSongs]);
+
+  // Function to play the previous track
+  const playPreviousTrack = useCallback(() => {
+    const prevIndex = (currentSongIndex - 1 + totalSongs) % totalSongs; // Loop back to last song if at start
+    setCurrentSongIndex(prevIndex); // Update current song index
+  }, [currentSongIndex, setCurrentSongIndex, totalSongs]);
 
   useEffect(() => {
     if (currentSong) {
@@ -40,7 +52,7 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
         audioRef.current.removeEventListener('ended', playNextTrack); // Clean up
       };
     }
-  }, [currentSongIndex, isPlaying]); // Use currentSongIndex in dependencies
+  }, [currentSong, isPlaying, playNextTrack]); // Use currentSong and other dependencies
 
   const togglePlayPause = async () => {
     try {
@@ -53,18 +65,6 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
     } catch (error) {
       console.error('Error toggling play/pause:', error);
     }
-  };
-
-  // Function to play the next track
-  const playNextTrack = () => {
-    const nextIndex = (currentSongIndex + 1) % totalSongs; // Loop back to first song if at end
-    setCurrentSongIndex(nextIndex); // Update current song index
-  };
-
-  // Function to play the previous track
-  const playPreviousTrack = () => {
-    const prevIndex = (currentSongIndex - 1 + totalSongs) % totalSongs; // Loop back to last song if at start
-    setCurrentSongIndex(prevIndex); // Update current song index
   };
 
   // Handle volume change
