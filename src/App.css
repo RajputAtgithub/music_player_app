@@ -17,7 +17,7 @@
   padding: 20px;
   background-color: #202020;
   overflow-y: hidden; /* Allow scrolling for the container */
-  max-height: 100vh; /* Ensure it doesn’t exceed viewport height */
+  height: 96.3%; 
 }
 
 .player-container {
