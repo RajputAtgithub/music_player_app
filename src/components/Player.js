@@ -110,7 +110,7 @@ const Player = ({ allSongs, topTracks, currentSongIndex, setCurrentSongIndex, is
         <>
           <h2 className="song-title">{currentSong.name}</h2>
           <h6 className="song-artist">{currentSong.artist}</h6>
-          <img src={`https://cms.samespace.com/assets/${currentSong.cover}`} alt={currentSong.title} className="album-cover" />
+          <img src={`https://cms.samespace.com/assets/${currentSong.cover}`} alt={currentSong.name} className="album-cover" />
 
           <div className="time-controls">
             <span className="song-start-time">{Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)}</span>
