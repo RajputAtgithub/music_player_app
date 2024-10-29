@@ -38,7 +38,14 @@ const SongList = ({ allSongs, topTracks, setCurrentSong, currentSongIndex, isPla
     setCurrentSong(song); // Set the current song when a song is clicked
   };
 
-  const displayedSongs = activeTab === 'forYou' ? allSongs : topTracks;
+  // Filter displayed songs based on search query
+  const displayedSongs = (activeTab === 'forYou' ? allSongs : topTracks).filter(song => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return (
+      song.name.toLowerCase().includes(lowerCaseQuery) || 
+      song.artist.toLowerCase().includes(lowerCaseQuery)
+    );
+  });
 
   return (
     <div className="song-list">
